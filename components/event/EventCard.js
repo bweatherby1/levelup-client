@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 
 const EventCard = ({
-  game, //
+  game,
   description,
   date,
   time,
@@ -20,11 +20,11 @@ const EventCard = ({
 );
 
 EventCard.propTypes = {
-  game: PropTypes.string.isRequired,
+  game: PropTypes.number.isRequired,
   description: PropTypes.string.isRequired,
-  date: PropTypes.number.isRequired,
-  time: PropTypes.number.isRequired,
-  organizer: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  time: PropTypes.string.isRequired,
+  organizer: PropTypes.number.isRequired,
 };
 
 export default EventCard;
