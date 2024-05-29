@@ -1,4 +1,4 @@
-import GameForm from './GameForm';
+import GameForm from '../../components/game/GameForm';
 import { useAuth } from '../../utils/context/authContext';
 
 const NewGame = () => {
