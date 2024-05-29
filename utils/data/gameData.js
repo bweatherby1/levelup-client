@@ -20,6 +20,13 @@ const createGame = (game) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
+const getSingleGame = (gameId) => new Promise((resolve, reject) => {
+  fetch(`${clientCredentials.databaseURL}/games/${gameId}`, {})
+    .then((response) => response.json())
+    .then(resolve)
+    .catch(reject);
+});
+
 const getGameTypes = () => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/gametypes`, {})
     .then((response) => response.json())
@@ -27,4 +34,6 @@ const getGameTypes = () => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-export { getGames, createGame, getGameTypes };
+export {
+  getGames, createGame, getGameTypes, getSingleGame,
+};
