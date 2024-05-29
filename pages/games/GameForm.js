@@ -79,7 +79,7 @@ const GameForm = ({ user }) => {
           <Form.Label>Game Type</Form.Label>
           <Form.Control as="select" name="gameTypeId" value={currentGame.gameTypeId} onChange={handleChange}>
             {gameTypes.map((type) => (
-              <option key={type.id} value={type.id}>{type.name}</option>
+              <option key={type.id} value={type.id}>{type.label}</option>
             ))}
           </Form.Control>
         </Form.Group>
