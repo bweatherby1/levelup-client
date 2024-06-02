@@ -9,7 +9,7 @@ const initialState = {
   numberOfPlayers: 0,
   title: '',
   maker: '',
-  gameTypeId: '',
+  gameTypeId: null,
 };
 
 const GameForm = ({ user }) => {
@@ -78,10 +78,12 @@ const GameForm = ({ user }) => {
         <Form.Group className="mb-3">
           <Form.Label>Game Type</Form.Label>
           <Form.Control as="select" name="gameTypeId" value={currentGame.gameTypeId} onChange={handleChange}>
+            <option value="">Select a game type</option> {/* Add this line */}
             {gameTypes.map((type) => (
               <option key={type.id} value={type.id}>{type.label}</option>
             ))}
           </Form.Control>
+
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit
