@@ -12,18 +12,22 @@ const initialState = {
   gameTypeId: null,
 };
 
-const GameForm = ({ user }) => {
+const GameForm = ({ user, obj, onSubmit }) => {
   const [gameTypes, setGameTypes] = useState([]);
-  /*
-  Since the input fields are bound to the values of
-  the properties of this state variable, you need to
-  provide some default values.
-  */
-  const [currentGame, setCurrentGame] = useState(initialState);
+  const [formData, setFormData] = useState(
+    obj
+      ? {
+        skillLevel: obj.skill_level,
+        numberOfPlayers: obj.number_of_players,
+        title: obj.title,
+        maker: obj.maker,
+        gameTypeId: obj.game_type,
+      }
+      : initialState,
+  );
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch game types when component mounts
     getGameTypes().then((types) => {
       setGameTypes(types);
     }).catch((error) => {
@@ -33,27 +37,29 @@ const GameForm = ({ user }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCurrentGame({
-      ...currentGame,
+    setFormData({
+      ...formData,
       [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
-    // Prevent form from being submitted
     e.preventDefault();
 
     const game = {
-      maker: currentGame.maker,
-      title: currentGame.title,
-      numberOfPlayers: Number(currentGame.numberOfPlayers),
-      skillLevel: Number(currentGame.skillLevel),
-      gameType: Number(currentGame.gameTypeId),
+      maker: formData.maker,
+      title: formData.title,
+      numberOfPlayers: Number(formData.numberOfPlayers),
+      skillLevel: Number(formData.skillLevel),
+      gameType: Number(formData.gameTypeId),
       userId: user.uid,
     };
 
-    // Send POST request to your API
-    createGame(game).then(() => router.push('/games'));
+    if (obj) {
+      onSubmit(game);
+    } else {
+      createGame(game).then(() => router.push('/games'));
+    }
   };
 
   return (
@@ -61,32 +67,58 @@ const GameForm = ({ user }) => {
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Title</Form.Label>
-          <Form.Control name="title" required value={currentGame.title} onChange={handleChange} />
+          <Form.Control
+            name="title"
+            required
+            value={formData.title}
+            onChange={handleChange}
+          />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Maker</Form.Label>
-          <Form.Control name="maker" required value={currentGame.maker} onChange={handleChange} />
+          <Form.Control
+            name="maker"
+            required
+            value={formData.maker}
+            onChange={handleChange}
+          />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Number of Players</Form.Label>
-          <Form.Control type="number" name="numberOfPlayers" value={currentGame.numberOfPlayers} onChange={handleChange} />
+          <Form.Control
+            type="number"
+            name="numberOfPlayers"
+            value={formData.numberOfPlayers}
+            onChange={handleChange}
+          />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Skill Level</Form.Label>
-          <Form.Control type="number" name="skillLevel" value={currentGame.skillLevel} onChange={handleChange} />
+          <Form.Control
+            type="number"
+            name="skillLevel"
+            value={formData.skillLevel}
+            onChange={handleChange}
+          />
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Game Type</Form.Label>
-          <Form.Control as="select" name="gameTypeId" value={currentGame.gameTypeId} onChange={handleChange}>
-            <option value="">Select a game type</option> {/* Add this line */}
+          <Form.Control
+            as="select"
+            name="gameTypeId"
+            value={formData.gameTypeId}
+            onChange={handleChange}
+          >
+            <option value="">Select a game type</option>
             {gameTypes.map((type) => (
-              <option key={type.id} value={type.id}>{type.label}</option>
+              <option key={type.id} value={type.id}>
+                {type.label}
+              </option>
             ))}
           </Form.Control>
-
         </Form.Group>
         <Button variant="primary" type="submit">
-          Submit
+          {obj ? 'Update Game' : 'Submit'}
         </Button>
       </Form>
     </>
@@ -97,6 +129,19 @@ GameForm.propTypes = {
   user: PropTypes.shape({
     uid: PropTypes.string.isRequired,
   }).isRequired,
+  obj: PropTypes.shape({
+    skill_level: PropTypes.number.isRequired,
+    number_of_players: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    maker: PropTypes.string.isRequired,
+    game_type: PropTypes.number.isRequired,
+  }),
+  onSubmit: PropTypes.func,
+};
+
+GameForm.defaultProps = {
+  obj: null,
+  onSubmit: () => {},
 };
 
 export default GameForm;
