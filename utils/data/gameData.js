@@ -3,7 +3,7 @@ import { clientCredentials } from '../client';
 const getGames = () => new Promise((resolve, reject) => {
   fetch(`${clientCredentials.databaseURL}/games`)
     .then((response) => response.json())
-    .then(resolve)
+    .then((data) => resolve(data))
     .catch(reject);
 });
 

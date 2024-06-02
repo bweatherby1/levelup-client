@@ -9,7 +9,7 @@ const initialState = {
   numberOfPlayers: 0,
   title: '',
   maker: '',
-  gameTypeId: 0,
+  gameTypeId: '',
 };
 
 const GameForm = ({ user }) => {
