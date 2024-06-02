@@ -8,9 +8,16 @@ const GameCard = ({
 }) => {
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleViewDetails = () => {
     router.push({
       pathname: '/games/1game',
+      query: { gameId },
+    });
+  };
+
+  const handleEditGame = () => {
+    router.push({
+      pathname: '/games/edit',
       query: { gameId },
     });
   };
@@ -23,7 +30,8 @@ const GameCard = ({
         <Card.Text>{numberOfPlayers} players needed</Card.Text>
       </Card.Body>
       <Card.Footer className="text-muted">Skill Level: {skillLevel}</Card.Footer>
-      <Button onClick={handleClick}>View Game Details</Button>
+      <Button onClick={handleViewDetails} className="mr-2">View Game Details</Button>
+      <Button onClick={handleEditGame} variant="primary">Edit Game</Button>
     </Card>
   );
 };
@@ -33,7 +41,7 @@ GameCard.propTypes = {
   maker: PropTypes.string.isRequired,
   numberOfPlayers: PropTypes.number.isRequired,
   skillLevel: PropTypes.number.isRequired,
-  gameId: PropTypes.number.isRequired, // Ensure gameId is defined as a prop
+  gameId: PropTypes.number.isRequired,
 };
 
 export default GameCard;
