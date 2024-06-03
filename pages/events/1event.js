@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { getSingleEvent } from '../../utils/data/eventData';
+import { getGames } from '../../utils/data/gameData';
 
 export default function ViewEvent() {
   const [eventDetails, setEventDetails] = useState({
@@ -10,6 +11,7 @@ export default function ViewEvent() {
     time: '',
     organizer: '',
   });
+  const [games, setGames] = useState([]);
   const router = useRouter();
 
   const { eventId } = router.query;
@@ -22,13 +24,16 @@ export default function ViewEvent() {
         })
         .catch((error) => console.error('Error fetching event details:', error));
     }
+    getGames().then((data) => setGames(data));
   }, [eventId]);
+
+  const gameTitle = games.find((g) => g.id === eventDetails.game)?.title || 'Unknown Game';
 
   return (
     <div className="mt-5 d-flex flex-wrap">
       <div>
         <h2>{eventDetails.description}</h2>
-        <p>Game: {eventDetails.game}</p>
+        <p>Game: {gameTitle}</p>
         <p>Date: {eventDetails.date}</p>
         <p>Time: {eventDetails.time}</p>
         <p>Organizer: {eventDetails.organizer}</p>

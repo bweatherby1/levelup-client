@@ -21,7 +21,7 @@ function Home() {
   return (
     <article className="games">
       <header>
-        <h1>Games</h1>
+        <h1 className="header">Games</h1>
         <Button
           onClick={() => {
             router.push('/games/new');
@@ -30,18 +30,20 @@ function Home() {
           Register New Game
         </Button>
       </header>
-      {games.map((game) => (
-        <section key={`game--${game.id}`} className="game">
-          <GameCard
-            gameId={game.id}
-            title={game.title}
-            maker={game.maker}
-            numberOfPlayers={game.number_of_players}
-            skillLevel={game.skill_level}
-            onDelete={handleDeleteGame}
-          />
-        </section>
-      ))}
+      <div className="gameContainer">
+        {games.map((game) => (
+          <div key={`game--${game.id}`} className="gameCard">
+            <GameCard
+              gameId={game.id}
+              title={game.title}
+              maker={game.maker}
+              numberOfPlayers={game.number_of_players}
+              skillLevel={game.skill_level}
+              onDelete={handleDeleteGame}
+            />
+          </div>
+        ))}
+      </div>
     </article>
   );
 }

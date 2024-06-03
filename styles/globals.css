@@ -20,3 +20,41 @@ a {
 body {
   background-color: #88effd;
 }
+
+.header {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.gameContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.gameCard {
+  width: 30%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.header {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.eventContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.eventCard {
+  width: 30%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
