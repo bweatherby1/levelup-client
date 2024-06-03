@@ -23,11 +23,13 @@ function Home() {
     setEvents(updatedEvents);
   };
 
-  const handleJoinLeave = (eventId, joined) => {
+  const handleJoinLeave = async (eventId, joined) => {
     try {
-      const updatedEvents = joined
-        ? leaveEvent(eventId)
-        : joinEvent(eventId);
+      const updatedEvent = joined
+        ? await leaveEvent(eventId)
+        : await joinEvent(eventId);
+
+      const updatedEvents = events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
       setEvents(updatedEvents);
     } catch (error) {
       console.error('Error joining/leaving event:', error);

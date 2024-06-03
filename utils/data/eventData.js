@@ -62,25 +62,22 @@ const deleteEvent = (eventId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const joinEvent = (eventId, eventData) => {
-  const userId = '1'; // Replace with the actual user_id value
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  const requestBody = JSON.stringify({ ...eventData, user_id: userId });
+const joinEvent = (eventId) => {
+  const userId = 'O7MgRkN2GvUSuFUEEt1MzBtNEde2';
+  const requestBody = JSON.stringify({ user_id: userId });
 
   return fetch(`${clientCredentials.databaseURL}/events/${eventId}/join`, {
     method: 'POST',
-    headers,
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: requestBody,
   })
     .then((response) => {
-      console.warn('Join Event Response:', response); // Add this line
       if (!response.ok) {
-        throw new Error('Failed to join event');
+        throw new Error(`HTTP error ${response.status}`);
       }
-      return getEvents();
+      return response.json();
     })
     .catch((error) => {
       console.error('Error joining event:', error);
@@ -89,7 +86,7 @@ const joinEvent = (eventId, eventData) => {
 };
 
 const leaveEvent = (eventId) => {
-  const userId = '1'; // Replace with the actual user_id value
+  const userId = 'O7MgRkN2GvUSuFUEEt1MzBtNEde2'; // Replace with the actual user_id value
   const requestBody = JSON.stringify({ user_id: userId });
 
   return fetch(`${clientCredentials.databaseURL}/events/${eventId}/leave`, {
@@ -100,11 +97,10 @@ const leaveEvent = (eventId) => {
     body: requestBody,
   })
     .then((response) => {
-      console.warn('Leave Event Response:', response); // Add this line
       if (!response.ok) {
-        throw new Error('Failed to leave event');
+        throw new Error(`HTTP error ${response.status}`);
       }
-      return getEvents();
+      return response.json();
     })
     .catch((error) => {
       console.error('Error leaving event:', error);
