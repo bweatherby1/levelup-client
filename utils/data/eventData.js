@@ -62,11 +62,11 @@ const deleteEvent = (eventId) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const joinEvent = (eventId) => {
+const joinEvent = (eventId) => new Promise((resolve, reject) => {
   const userId = 'O7MgRkN2GvUSuFUEEt1MzBtNEde2';
   const requestBody = JSON.stringify({ user_id: userId });
 
-  return fetch(`${clientCredentials.databaseURL}/events/${eventId}/join`, {
+  fetch(`${clientCredentials.databaseURL}/events/${eventId}/join`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -74,22 +74,20 @@ const joinEvent = (eventId) => {
     body: requestBody,
   })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
+      if (response.status === 204) {
+        return {};
       }
       return response.json();
     })
-    .catch((error) => {
-      console.error('Error joining event:', error);
-      throw error;
-    });
-};
+    .then(resolve)
+    .catch(reject);
+});
 
-const leaveEvent = (eventId) => {
+const leaveEvent = (eventId) => new Promise((resolve, reject) => {
   const userId = 'O7MgRkN2GvUSuFUEEt1MzBtNEde2'; // Replace with the actual user_id value
   const requestBody = JSON.stringify({ user_id: userId });
 
-  return fetch(`${clientCredentials.databaseURL}/events/${eventId}/leave`, {
+  fetch(`${clientCredentials.databaseURL}/events/${eventId}/leave`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -97,16 +95,14 @@ const leaveEvent = (eventId) => {
     body: requestBody,
   })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
+      if (response.status === 204) {
+        return {};
       }
       return response.json();
     })
-    .catch((error) => {
-      console.error('Error leaving event:', error);
-      throw error;
-    });
-};
+    .then(resolve)
+    .catch(reject);
+});
 
 export {
   getEvents, createEvent, getSingleEvent, updateEvent, deleteEvent, leaveEvent, joinEvent,
