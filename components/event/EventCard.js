@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 
@@ -12,9 +12,12 @@ const EventCard = ({
   organizer,
   eventId,
   onDelete,
+  joined,
+  onJoinLeave,
 }) => {
   const router = useRouter();
   const gameTitle = games.find((g) => g.id === game)?.title || 'Unknown Game';
+  const [isJoined, setIsJoined] = useState(joined);
 
   const handleViewDetails = () => {
     router.push({
@@ -34,6 +37,11 @@ const EventCard = ({
     onDelete(eventId);
   };
 
+  const handleJoinLeave = () => {
+    onJoinLeave(eventId, isJoined);
+    setIsJoined(!isJoined);
+  };
+
   return (
     <Card className="text-center">
       <Card.Header>{description}</Card.Header>
@@ -50,6 +58,9 @@ const EventCard = ({
       </Button>
       <Button onClick={handleDeleteEvent} variant="danger">
         Delete Game
+      </Button>
+      <Button onClick={handleJoinLeave} variant={isJoined ? 'danger' : 'success'}>
+        {isJoined ? 'Leave Event' : 'Join Event'}
       </Button>
     </Card>
   );
@@ -69,6 +80,8 @@ EventCard.propTypes = {
   organizer: PropTypes.number.isRequired,
   eventId: PropTypes.number.isRequired,
   onDelete: PropTypes.func.isRequired,
+  joined: PropTypes.bool.isRequired,
+  onJoinLeave: PropTypes.func.isRequired,
 };
 
 export default EventCard;

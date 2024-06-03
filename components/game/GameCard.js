@@ -42,7 +42,7 @@ const GameCard = ({
       <Button onClick={handleViewDetails} className="mr-2">
         View Game Details
       </Button>
-      <Button onClick={handleEditGame} variant="primary">
+      <Button onClick={handleEditGame} variant="warning">
         Edit Game
       </Button>
       <Button onClick={handleDeleteGame} variant="danger">

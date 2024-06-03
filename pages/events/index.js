@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import EventCard from '../../components/event/EventCard';
-import { getEvents, deleteEvent } from '../../utils/data/eventData';
+import {
+  getEvents, deleteEvent, joinEvent, leaveEvent,
+} from '../../utils/data/eventData';
 import { getGames } from '../../utils/data/gameData';
 
 function Home() {
@@ -21,6 +23,17 @@ function Home() {
     setEvents(updatedEvents);
   };
 
+  const handleJoinLeave = (eventId, joined) => {
+    try {
+      const updatedEvents = joined
+        ? leaveEvent(eventId)
+        : joinEvent(eventId);
+      setEvents(updatedEvents);
+    } catch (error) {
+      console.error('Error joining/leaving event:', error);
+    }
+  };
+
   return (
     <article className="events">
       <header>
@@ -34,20 +47,26 @@ function Home() {
         </Button>
       </header>
       <div className="eventContainer">
-        {events.map((event) => (
-          <div key={`event--${event.id}`} className="eventCard">
-            <EventCard
-              games={games}
-              eventId={event.id}
-              game={event.game}
-              description={event.description}
-              date={event.date}
-              time={event.time}
-              organizer={event.organizer}
-              onDelete={handleDeleteEvent}
-            />
-          </div>
-        ))}
+        {events && events.length > 0 ? (
+          events.map((event) => (
+            <div key={`event--${event.id}`} className="eventCard">
+              <EventCard
+                games={games}
+                eventId={event.id}
+                game={event.game}
+                description={event.description}
+                date={event.date}
+                time={event.time}
+                organizer={event.organizer}
+                onDelete={handleDeleteEvent}
+                joined={event.joined || false}
+                onJoinLeave={handleJoinLeave}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No events found.</p>
+        )}
       </div>
     </article>
   );
