@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getSingleGame } from '../../utils/data/gameData';
+import { getSingleGame, getGameTypes } from '../../utils/data/gameData';
 
 export default function ViewGame() {
   const [gameDetails, setGameDetails] = useState({
@@ -10,8 +10,8 @@ export default function ViewGame() {
     maker: '',
     game_type: '',
   });
+  const [gameTypes, setGameTypes] = useState([]);
   const router = useRouter();
-
   const { gameId } = router.query;
 
   useEffect(() => {
@@ -22,7 +22,18 @@ export default function ViewGame() {
         })
         .catch((error) => console.error('Error fetching game details:', error));
     }
+    getGameTypes()
+      .then((types) => {
+        setGameTypes(types);
+      })
+      .catch((error) => console.error('Error fetching game types:', error));
   }, [gameId]);
+
+  // Helper function to get the label for a given game type ID
+  const getGameTypeLabel = (gameTypeId) => {
+    const gameType = gameTypes.find((type) => type.id === gameTypeId);
+    return gameType ? gameType.label : '';
+  };
 
   return (
     <div className="mt-5 d-flex flex-wrap">
@@ -31,7 +42,7 @@ export default function ViewGame() {
         <p>Maker: {gameDetails.maker}</p>
         <p>Skill Level: {gameDetails.skill_level}</p>
         <p>Number of Players: {gameDetails.number_of_players}</p>
-        <p>Game Type: {gameDetails.game_type}</p>
+        <p>Game Type: {getGameTypeLabel(gameDetails.game_type)}</p>
       </div>
     </div>
   );

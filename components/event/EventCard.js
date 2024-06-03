@@ -13,9 +13,16 @@ const EventCard = ({
 }) => {
   const router = useRouter(); // Initializing the router
 
-  const handleClick = () => {
+  const handleViewDetails = () => {
     router.push({
       pathname: '/events/1event',
+      query: { eventId },
+    });
+  };
+
+  const handleEditEvent = () => {
+    router.push({
+      pathname: '/events/edit',
       query: { eventId },
     });
   };
@@ -28,7 +35,8 @@ const EventCard = ({
         <Card.Text>{date}, {time}</Card.Text>
       </Card.Body>
       <Card.Footer className="text-muted">{game}</Card.Footer>
-      <Button onClick={handleClick}>View Event Details</Button>
+      <Button onClick={handleViewDetails} className="mr-2">View Event Details</Button>
+      <Button onClick={handleEditEvent} variant="primary">Edit Event</Button>
     </Card>
   );
 };
