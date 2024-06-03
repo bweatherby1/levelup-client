@@ -10,6 +10,7 @@ const EventCard = ({
   time,
   organizer,
   eventId,
+  onDelete,
 }) => {
   const router = useRouter(); // Initializing the router
 
@@ -27,6 +28,10 @@ const EventCard = ({
     });
   };
 
+  const handleDeleteEvent = () => {
+    onDelete(eventId);
+  };
+
   return (
     <Card className="text-center">
       <Card.Header>{description}</Card.Header>
@@ -37,6 +42,9 @@ const EventCard = ({
       <Card.Footer className="text-muted">{game}</Card.Footer>
       <Button onClick={handleViewDetails} className="mr-2">View Event Details</Button>
       <Button onClick={handleEditEvent} variant="primary">Edit Event</Button>
+      <Button onClick={handleDeleteEvent} variant="danger">
+        Delete Game
+      </Button>
     </Card>
   );
 };
@@ -48,6 +56,7 @@ EventCard.propTypes = {
   time: PropTypes.string.isRequired,
   organizer: PropTypes.number.isRequired,
   eventId: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default EventCard;
