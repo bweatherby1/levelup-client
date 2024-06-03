@@ -1,43 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
-import { getSingleEvent } from '../../utils/data/eventData';
+import EventCard from '../../components/event/EventCard';
+import {
+  getEvents, deleteEvent, joinEvent, leaveEvent,
+} from '../../utils/data/eventData';
 import { getGames } from '../../utils/data/gameData';
 
-export default function ViewEvent() {
-  const [eventDetails, setEventDetails] = useState({
-    game: '',
-    description: '',
-    date: '',
-    time: '',
-    organizer: '',
-  });
+function Home() {
+  const [events, setEvents] = useState([]);
   const [games, setGames] = useState([]);
   const router = useRouter();
 
-  const { eventId } = router.query;
+  const fetchData = async () => {
+    const eventsData = await getEvents();
+    const gamesData = await getGames();
+    setEvents(eventsData);
+    setGames(gamesData);
+  };
 
   useEffect(() => {
-    if (eventId) {
-      getSingleEvent(eventId)
-        .then((data) => {
-          setEventDetails(data);
-        })
-        .catch((error) => console.error('Error fetching event details:', error));
-    }
-    getGames().then((data) => setGames(data));
-  }, [eventId]);
+    fetchData();
+  }, []);
 
-  const gameTitle = games.find((g) => g.id === eventDetails.game)?.title || 'Unknown Game';
+  const handleDeleteEvent = async (eventId) => {
+    await deleteEvent(eventId);
+    fetchData();
+  };
+
+  const handleJoinLeave = async (eventId, joined) => {
+    try {
+      const updatedEvent = joined
+        ? await leaveEvent(eventId)
+        : await joinEvent(eventId);
+
+      const updatedEvents = events.map((event) => (event.id === updatedEvent.id ? updatedEvent : event));
+      setEvents(updatedEvents);
+    } catch (error) {
+      console.error('Error joining/leaving event:', error);
+    }
+  };
 
   return (
-    <div className="mt-5 d-flex flex-wrap">
-      <div>
-        <h2>{eventDetails.description}</h2>
-        <p>Game: {gameTitle}</p>
-        <p>Date: {eventDetails.date}</p>
-        <p>Time: {eventDetails.time}</p>
-        <p>Organizer: {eventDetails.organizer}</p>
+    <article className="events">
+      <header>
+        <h1 className="header">Events</h1>
+        <Button
+          onClick={() => {
+            router.push('/events/new');
+          }}
+        >
+          Register New Event
+        </Button>
+      </header>
+      <div className="eventContainer">
+        {events && events.length > 0 ? (
+          events.map((event) => (
+            <div key={`event--${event.id}`} className="eventCard">
+              <EventCard
+                games={games}
+                event={event}
+                onDelete={handleDeleteEvent}
+                onJoinLeave={handleJoinLeave}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No events found.</p>
+        )}
       </div>
-    </div>
+    </article>
   );
 }
+
+export default Home;

@@ -37,9 +37,17 @@ const EventCard = ({
     onDelete(eventId);
   };
 
-  const handleJoinLeave = () => {
-    onJoinLeave(eventId, isJoined);
-    setIsJoined(!isJoined);
+  const handleJoinLeave = async () => {
+    try {
+      if (isJoined) {
+        await onJoinLeave(eventId, true);
+      } else {
+        await onJoinLeave(eventId, false);
+      }
+      setIsJoined(!isJoined);
+    } catch (error) {
+      console.error('Error joining/leaving event:', error);
+    }
   };
 
   return (
@@ -53,11 +61,11 @@ const EventCard = ({
       <Button onClick={handleViewDetails} className="mr-2">
         View Event Details
       </Button>
-      <Button onClick={handleEditEvent} variant="primary">
+      <Button onClick={handleEditEvent} variant="warning">
         Edit Event
       </Button>
       <Button onClick={handleDeleteEvent} variant="danger">
-        Delete Game
+        Delete Event
       </Button>
       <Button onClick={handleJoinLeave} variant={isJoined ? 'danger' : 'success'}>
         {isJoined ? 'Leave Event' : 'Join Event'}
