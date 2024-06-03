@@ -4,7 +4,12 @@ import { Card, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 
 const GameCard = ({
-  title, maker, numberOfPlayers, skillLevel, gameId,
+  title,
+  maker,
+  numberOfPlayers,
+  skillLevel,
+  gameId,
+  onDelete,
 }) => {
   const router = useRouter();
 
@@ -22,6 +27,10 @@ const GameCard = ({
     });
   };
 
+  const handleDeleteGame = () => {
+    onDelete(gameId);
+  };
+
   return (
     <Card className="text-center">
       <Card.Header>{title}</Card.Header>
@@ -30,8 +39,15 @@ const GameCard = ({
         <Card.Text>{numberOfPlayers} players needed</Card.Text>
       </Card.Body>
       <Card.Footer className="text-muted">Skill Level: {skillLevel}</Card.Footer>
-      <Button onClick={handleViewDetails} className="mr-2">View Game Details</Button>
-      <Button onClick={handleEditGame} variant="primary">Edit Game</Button>
+      <Button onClick={handleViewDetails} className="mr-2">
+        View Game Details
+      </Button>
+      <Button onClick={handleEditGame} variant="primary">
+        Edit Game
+      </Button>
+      <Button onClick={handleDeleteGame} variant="danger">
+        Delete Game
+      </Button>
     </Card>
   );
 };
@@ -42,6 +58,7 @@ GameCard.propTypes = {
   numberOfPlayers: PropTypes.number.isRequired,
   skillLevel: PropTypes.number.isRequired,
   gameId: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default GameCard;

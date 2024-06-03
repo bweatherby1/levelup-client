@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import GameCard from '../../components/game/GameCard';
-import { getGames } from '../../utils/data/gameData';
+import { getGames, deleteGame } from '../../utils/data/gameData';
 
 function Home() {
   const [games, setGames] = useState([]);
@@ -11,6 +11,12 @@ function Home() {
   useEffect(() => {
     getGames().then((data) => setGames(data));
   }, []);
+
+  const handleDeleteGame = async (gameId) => {
+    await deleteGame(gameId);
+    const updatedGames = await getGames();
+    setGames(updatedGames);
+  };
 
   return (
     <article className="games">
@@ -26,7 +32,14 @@ function Home() {
       </header>
       {games.map((game) => (
         <section key={`game--${game.id}`} className="game">
-          <GameCard gameId={game.id} title={game.title} maker={game.maker} numberOfPlayers={game.number_of_players} skillLevel={game.skill_level} />
+          <GameCard
+            gameId={game.id}
+            title={game.title}
+            maker={game.maker}
+            numberOfPlayers={game.number_of_players}
+            skillLevel={game.skill_level}
+            onDelete={handleDeleteGame}
+          />
         </section>
       ))}
     </article>

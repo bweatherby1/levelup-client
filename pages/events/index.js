@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import EventCard from '../../components/event/EventCard';
-import { getEvents } from '../../utils/data/eventData';
+import { getEvents, deleteEvent } from '../../utils/data/eventData';
 
 function Home() {
   const [events, setEvents] = useState([]);
@@ -11,6 +11,12 @@ function Home() {
   useEffect(() => {
     getEvents().then((data) => setEvents(data));
   }, []);
+
+  const handleDeleteEvent = async (eventId) => {
+    await deleteEvent(eventId);
+    const updatedEvents = await getEvents();
+    setEvents(updatedEvents);
+  };
 
   return (
     <article className="events">
@@ -26,7 +32,7 @@ function Home() {
       </header>
       {events.map((event) => (
         <section key={`event--${event.id}`} className="event">
-          <EventCard eventId={event.id} game={event.game} description={event.description} date={event.date} time={event.time} organizer={event.organizer} />
+          <EventCard eventId={event.id} game={event.game} description={event.description} date={event.date} time={event.time} organizer={event.organizer} onDelete={handleDeleteEvent} />
         </section>
       ))}
     </article>
