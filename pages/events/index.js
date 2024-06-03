@@ -3,13 +3,16 @@ import { Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import EventCard from '../../components/event/EventCard';
 import { getEvents, deleteEvent } from '../../utils/data/eventData';
+import { getGames } from '../../utils/data/gameData';
 
 function Home() {
   const [events, setEvents] = useState([]);
+  const [games, setGames] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     getEvents().then((data) => setEvents(data));
+    getGames().then((data) => setGames(data));
   }, []);
 
   const handleDeleteEvent = async (eventId) => {
@@ -21,7 +24,7 @@ function Home() {
   return (
     <article className="events">
       <header>
-        <h1>Events</h1>
+        <h1 className="header">Events</h1>
         <Button
           onClick={() => {
             router.push('/events/new');
@@ -30,11 +33,22 @@ function Home() {
           Register New Event
         </Button>
       </header>
-      {events.map((event) => (
-        <section key={`event--${event.id}`} className="event">
-          <EventCard eventId={event.id} game={event.game} description={event.description} date={event.date} time={event.time} organizer={event.organizer} onDelete={handleDeleteEvent} />
-        </section>
-      ))}
+      <div className="eventContainer">
+        {events.map((event) => (
+          <div key={`event--${event.id}`} className="eventCard">
+            <EventCard
+              games={games}
+              eventId={event.id}
+              game={event.game}
+              description={event.description}
+              date={event.date}
+              time={event.time}
+              organizer={event.organizer}
+              onDelete={handleDeleteEvent}
+            />
+          </div>
+        ))}
+      </div>
     </article>
   );
 }

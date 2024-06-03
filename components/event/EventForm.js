@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { createEvent, updateEvent } from '../../utils/data/eventData';
+import { getGames } from '../../utils/data/gameData';
 
 const initialState = {
   game: '',
@@ -14,6 +15,7 @@ const initialState = {
 
 const EventForm = ({ user, eventObj }) => {
   const [formData, setFormData] = useState(eventObj || initialState);
+  const [games, setGames] = useState([]);
   const router = useRouter();
   const { eventId } = router.query;
 
@@ -27,6 +29,7 @@ const EventForm = ({ user, eventObj }) => {
         organizer: eventObj.organizer,
       });
     }
+    getGames().then((data) => setGames(data));
   }, [eventObj]);
 
   const handleChange = (e) => {
@@ -64,17 +67,26 @@ const EventForm = ({ user, eventObj }) => {
     }
   };
 
+  const gameOptions = games.map((game) => (
+    <option key={game.id} value={game.id}>
+      {game.title}
+    </option>
+  ));
+
   return (
     <>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Game</Form.Label>
-          <Form.Control
+          <Form.Select
             name="game"
             required
             value={formData.game}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select a game</option>
+            {gameOptions}
+          </Form.Select>
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Label>Description</Form.Label>
